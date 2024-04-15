@@ -28,37 +28,25 @@ void setup()
     {
         pinMode(segmentos[i], OUTPUT);
     }
-    for (int k = 0; k < 3; k++)
+    for (int k = 0; k < 2; k++)
     {
         pinMode(dig[k], OUTPUT);
         digitalWrite(dig[k], HIGH); // Cambiado a HIGH para apagar los displays
     }
-}
-
-void mostrarDigito(int valor, int display)
-{
-    for (int s = 0; s < 7; s++)
-    {
-        digitalWrite(segmentos[s], num[valor][s]);
-    }
-    digitalWrite(dig[display], LOW);
-    delay(10);
-    digitalWrite(dig[display], HIGH);
+    
 }
 
 void loop()
 {
-    delay(1000);
-
     valorsensor = analogRead(PIN_LM35); // Leer el valor del sensor LM35
-
+    
     // Convertir el valor del ADC a voltaje en milivoltios
     float milliVolt = valorsensor * (ADC_VREF_mV / ADC_RESOLUTION);
     // Convertir el voltaje a temperatura en °C
     float tempC = milliVolt / 10;
     // Convertir de °C a °F
     float tempF = tempC * 9 / 5 + 32;
- Serial.print("Temperatura: ");
+    Serial.print("Temperatura: ");
     Serial.print(tempC); // Imprimir la temperatura en °C
     Serial.print("°C");
     Serial.print("  ~  "); // Separador entre °C y °F
@@ -66,8 +54,8 @@ void loop()
     Serial.println("°F");
     int parte_entera = (int)tempC; // Convierte el número a entero
     float parte_decimal = tempC - parte_entera; // Calcula la parte decimal
-    int decena = parte_entera / 10; // Obtiene la decena de la parte entera
-    int unidad = parte_entera % 10; // Obtiene la unidad de la parte entera
+    int unidad = parte_entera / 10; // Obtiene la decena de la parte entera
+    int decena = parte_entera % 10; // Obtiene la unidad de la parte entera
 
     Serial.print("Decena: ");
     Serial.println(decena);
@@ -76,10 +64,21 @@ void loop()
     Serial.print("Parte Decimal: ");
     Serial.println(parte_decimal, 2); // Muestra la parte decimal con dos decimales
     
-    // Mostrar decena y unidad en los displays
-    mostrarDigito(decena, 0);
-    mostrarDigito(unidad, 1);
+    // Mostrar decena en el display 0 y unidad en el display 1
 
+    int valor[2] = {decena, unidad};
+  
+    for (int j = 0; j < 2; j++) {
+        digitalWrite(dig[j], HIGH);
+    }
+  
+    for (int j = 0; j < 2; j++) {
+        for (int s = 0; s < 7; s++) {
+            digitalWrite(segmentos[s], num[valor[j]][s]);
+        }
 
-
+        digitalWrite(dig[j], LOW);
+        delay(20);
+        digitalWrite(dig[j], HIGH);
+    }
 }

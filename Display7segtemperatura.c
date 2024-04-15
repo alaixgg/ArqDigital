@@ -69,10 +69,6 @@ void loop()
     int valor[2] = {decena, unidad};
   
     for (int j = 0; j < 2; j++) {
-        digitalWrite(dig[j], HIGH);
-    }
-  
-    for (int j = 0; j < 2; j++) {
         for (int s = 0; s < 7; s++) {
             digitalWrite(segmentos[s], num[valor[j]][s]);
         }
